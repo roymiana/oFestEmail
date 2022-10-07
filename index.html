@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Email Generator</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="style.css">
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/35.2.0/decoupled-document/ckeditor.js"></script>
+    </head>
+    <body>
+        <h2>Email Generator</h2>
+        <hr />
+        <h3>GMail Authentication:</h3>
+        <button 
+            id="authorize_button" 
+            onclick="handleAuthClick()"
+        >
+            Authenticate
+        </button>
+        <button
+            id="signout_button" 
+            onclick="handleSignoutClick()"
+        >
+            Sign Out
+        </button>
+        <div id="auth_load" class="load">
+            Authenticating
+            <div class="loader"></div>
+        </div>
+        <hr />
+        <h3>Upload JSON File</h3>
+        <p>Convert your spreadsheet into a JSON File</p>
+        <p>You may use this tool:  
+            <a href="https://www.aconvert.com/document/xlsx-to-json/">
+                Spreadsheet to JSON Converter
+            </a>
+        </p>
+        <input type="file" id="selectFiles" value="Import" />
+        <button id="import">Import</button>
+        <hr />
+        <h3>Compose Email</h3>
+        <p>To: </p>
+        <div class="recepients" id="recepients">
+            Recepients
+        </div>
+        <p>Subject: </p>
+        <input 
+            id="subject"
+            type="text"
+            style="width: 97%"
+        />
+        <p>Content: </p>
+        <div>
+            <div id="toolbar-container"></div>
+
+            <div class="editor" id="editor">
+                <p>Enter your email Here</p>
+            </div>
+        </div>
+        <button onclick="sendToAll()">Send Email</button>
+        <div id="send_load" class="load">
+            Sending
+            <div class="loader"></div>
+        </div>
+        <h4 id="sent" class="load">SENT!</h4>
+        <script type="text/javascript">
+            document.getElementById('import').onclick = function() {
+                var files = document.getElementById('selectFiles').files;
+                console.log(files);
+                if (files.length <= 0) {
+                    return false;
+                }
+
+                var fr = new FileReader();
+
+                fr.onload = function(e) { 
+                    console.log(e);
+                    var result = JSON.parse(e.target.result);
+                    dataSheet = result;
+                    listRecepients();
+                    var formatted = JSON.stringify(result, null, 2);
+                }
+
+                fr.readAsText(files.item(0));
+            };
+
+        </script>
+        <script src="./index.js"></script>
+        <script src="./auth.js"></script>
+        <script async defer src="https://apis.google.com/js/api.js"></script>
+        <script async defer src="https://accounts.google.com/gsi/client"></script>
+    </body>
+</html>
